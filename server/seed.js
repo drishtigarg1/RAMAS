@@ -10,7 +10,13 @@ dotenv.config();
 
 const seedData = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+
+    if (!mongoUri) {
+      throw new Error("MONGO_URI or MONGODB_URI environment variable is required.");
+    }
+
+    await mongoose.connect(mongoUri);
     console.log("MongoDB connected for Seeding...");
 
     // Clear existing data
