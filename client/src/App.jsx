@@ -22,7 +22,7 @@ import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 
 import Profile from "./pages/Profile";
-import Orders from "./pages/Orders";
+import Orders from "./pages/orders";
 import Addresses from "./pages/Addresses";
 
 import Login from "./pages/Login";
