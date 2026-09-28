@@ -10,32 +10,34 @@ const createAdmin = async () => {
   try {
     await connectDB();
 
-    const existingAdmin = await User.findOne({
-      email: "admin@ramastationers.com",
-    });
+    const name = process.env.ADMIN_NAME;
+    const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+    const password = process.env.ADMIN_PASSWORD;
 
-    if (existingAdmin) {
-      console.log("✅ Admin already exists.");
-      process.exit();
+    if (!name || !email || !password) {
+      throw new Error("ADMIN_NAME, ADMIN_EMAIL, and ADMIN_PASSWORD are required.");
     }
 
-    const admin = await User.create({
-      name: "Roshan Kumar Singh",
-      email: "admin@ramastationers.com",
-      password: "Admin@123456",
-      phone: "",
-      role: "admin",
-      isVerified: true,
-    });
+    const admin = await User.findOne({ email }).select("+password");
+    const account = admin || new User({ email });
 
-    console.log("✅ Admin Created Successfully");
-    console.log(admin.email);
+    account.name = name;
+    account.email = email;
+    account.password = password;
+    account.phone = "";
+    account.role = "admin";
+    account.isVerified = true;
+    await account.save();
 
-    process.exit();
+    console.log("✅ Admin account created or updated successfully.");
+    console.log(`Admin email: ${account.email}`);
+
+    await mongoose.connection.close();
+    process.exit(0);
 
   } catch (error) {
-    console.log(error);
-
+    console.error("❌ Admin setup failed:", error.message);
+    await mongoose.connection.close();
     process.exit(1);
   }
 };
