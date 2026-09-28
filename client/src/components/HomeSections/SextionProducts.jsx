@@ -1,4 +1,4 @@
-import ProductGrid from "../Product/ProductGrid";
+import ProductGrid from "../Products/ProductGrid";
 
 export default function SectionProducts({
     title,

@@ -14,7 +14,7 @@ import {
   quickLinks,
   categories,
   customerSupport,
-} from "./footerLinks";
+} from "./FooterLinks";
 
 export default function Footer() {
   return (

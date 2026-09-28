@@ -2,9 +2,9 @@ import { FiTrash2 } from "react-icons/fi";
 
 import { useCart } from "../context/CartContext";
 
-import CartItem from "../components/cart/CartItem";
-import CartSummary from "../components/cart/CartSummary";
-import EmptyCart from "../components/cart/EmptyCart";
+import CartItem from "../components/Cart/CartItem";
+import CartSummary from "../components/Cart/CartSummary";
+import EmptyCart from "../components/Cart/EmptyCart";
 
 export default function Cart() {
   const {

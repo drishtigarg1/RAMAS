@@ -1,7 +1,7 @@
 import Container from "../Common/Container";
 import CategoryCard from "./CategoryCard";
 import categories from "./categoryData";
-import { SectionHeading } from "../ui";
+import { SectionHeading } from "../UI";
 
 export default function Categories() {
   return (
