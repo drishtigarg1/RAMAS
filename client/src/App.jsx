@@ -28,8 +28,12 @@ import Addresses from "./pages/Addresses";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
-import VerifyOTP from "./pages/VerifyOTP";
 import ResetPassword from "./pages/ResetPassword";
+import Terms from "./pages/Info/Terms";
+import PrivacyPolicy from "./pages/Info/PrivacyPolicy";
+import ShippingPolicy from "./pages/Info/ShippingPolicy";
+import ReturnPolicy from "./pages/Info/ReturnPolicy";
+import FAQ from "./pages/Info/FAQ";
 
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -68,7 +72,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
@@ -101,6 +104,11 @@ function App() {
 
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/shipping" element={<ShippingPolicy />} />
+        <Route path="/returns" element={<ReturnPolicy />} />
+        <Route path="/faq" element={<FAQ />} />
 
         {/* ================= PROTECTED PAGES ================= */}
         <Route element={<ProtectedRoute />}>
