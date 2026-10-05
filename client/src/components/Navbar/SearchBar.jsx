@@ -3,6 +3,7 @@ import {
   FiSearch,
   FiX,
 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 import SearchSuggestions from "./SearchSuggestions";
 import products from "../../data/products";
@@ -10,6 +11,14 @@ import products from "../../data/products";
 export default function SearchBar() {
   const [search, setSearch] = useState("");
   const inputRef = useRef(null);
+  const navigate = useNavigate();
+
+  const submitSearch = (event) => {
+    event.preventDefault();
+    const query = search.trim();
+    if (!query) return;
+    navigate(`/search?keyword=${encodeURIComponent(query)}`);
+  };
 
   useEffect(() => {
     const handleShortcut = (e) => {
@@ -40,7 +49,8 @@ export default function SearchBar() {
   return (
     <div className="relative w-full">
 
-      <div
+      <form
+        onSubmit={submitSearch}
         className="
           group
           relative
@@ -172,7 +182,7 @@ export default function SearchBar() {
 
           <FiSearch className="sm:hidden" />
         </button>
-      </div>
+      </form>
 
       <SearchSuggestions
         search={search}
