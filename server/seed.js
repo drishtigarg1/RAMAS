@@ -10,10 +10,23 @@ dotenv.config();
 
 const seedData = async () => {
   try {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("The destructive seed script is disabled in production.");
+    }
+
     const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+    const adminName = process.env.ADMIN_NAME;
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const seedUserEmail = process.env.SEED_USER_EMAIL;
+    const seedUserPassword = process.env.SEED_USER_PASSWORD;
 
     if (!mongoUri) {
       throw new Error("MONGO_URI or MONGODB_URI environment variable is required.");
+    }
+
+    if (!adminName || !adminEmail || !adminPassword || !seedUserEmail || !seedUserPassword) {
+      throw new Error("ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD, SEED_USER_EMAIL, and SEED_USER_PASSWORD are required.");
     }
 
     await mongoose.connect(mongoUri);
@@ -28,22 +41,22 @@ const seedData = async () => {
 
     // 1. Create Users
     const adminUser = await User.create({
-      name: "Admin Manager",
-      email: "admin@example.com",
-      password: "password123",
+      name: adminName,
+      email: adminEmail,
+      password: adminPassword,
       role: "admin",
       isVerified: true,
     });
 
     const buyerUser = await User.create({
       name: "Happy Buyer",
-      email: "buyer@example.com",
-      password: "password123",
+      email: seedUserEmail,
+      password: seedUserPassword,
       role: "user",
       isVerified: true,
     });
 
-    console.log("Users Seeded: admin@example.com & buyer@example.com (pw: password123)");
+    console.log(`Users seeded: ${adminUser.email} and ${buyerUser.email}`);
 
     // 2. Create Categories
     const catStationery = await Category.create({ name: "Stationery", slug: "stationery" });
