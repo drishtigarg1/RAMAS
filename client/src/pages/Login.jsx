@@ -72,8 +72,7 @@ const from = location.state?.from?.pathname || "/";
         password: formData.password 
       });
       
-      localStorage.setItem("token", data.token);
-      login(data.user);
+      login(data.user, data.token);
       navigate(from, { replace: true });
     } catch (error) {
        setErrors({ email: "Invalid email or password." });

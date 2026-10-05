@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import authApi from "../api/authApi";
 
 const AuthContext = createContext();
 
@@ -10,21 +11,42 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
+    if (!token) {
+      setLoading(false);
+      return;
     }
 
-    setLoading(false);
+    let active = true;
+
+    authApi.profile()
+      .then(({ data }) => {
+        if (!active) return;
+        const currentUser = data.user;
+        localStorage.setItem("user", JSON.stringify(currentUser));
+        setUser(currentUser);
+        setIsAuthenticated(true);
+      })
+      .catch(() => {
+        if (!active) return;
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setUser(null);
+        setIsAuthenticated(false);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
-  const login = (userData) => {
-    localStorage.setItem(
-      "user",
-      JSON.stringify(userData)
-    );
+  const login = (userData, token) => {
+    if (token) localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData));
 
     setUser(userData);
 
@@ -32,6 +54,8 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
+    authApi.logout().catch(() => {});
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
 
     setUser(null);

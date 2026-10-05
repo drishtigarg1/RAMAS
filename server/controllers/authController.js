@@ -6,12 +6,43 @@ import sendEmail from "../utils/sendEmail.js";
 // ================= REGISTER =================
 export const register = async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
+    const name = req.body.name?.trim();
+    const email = req.body.email?.trim().toLowerCase();
+    const password = req.body.password;
+    const phone = req.body.phone?.trim() || "";
 
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
         message: "Please fill all required fields.",
+      });
+    }
+
+    if (name.length < 2 || name.length > 100) {
+      return res.status(400).json({
+        success: false,
+        message: "Name must be between 2 and 100 characters.",
+      });
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(email) || email.length > 254) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid email address.",
+      });
+    }
+
+    if (password.length < 8 || password.length > 128) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must contain between 8 and 128 characters.",
+      });
+    }
+
+    if (phone && !/^[6-9]\d{9}$/.test(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid 10-digit mobile number.",
       });
     }
 
@@ -56,8 +87,15 @@ export const register = async (req, res) => {
 // ================= LOGIN =================
 export const login = async (req, res) => {
   try {
+    const email = req.body.email?.trim().toLowerCase();
+    const password = req.body.password;
 
-    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required.",
+      });
+    }
 
     const user = await User.findOne({ email }).select("+password");
 
@@ -145,8 +183,8 @@ export const resetPassword = async (req, res) => {
   const token = req.params.token;
   const password = req.body.password;
 
-  if (!password || password.length < 8) {
-    return res.status(400).json({ message: "Password must contain at least 8 characters." });
+  if (!password || password.length < 8 || password.length > 128) {
+    return res.status(400).json({ message: "Password must contain between 8 and 128 characters." });
   }
 
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
