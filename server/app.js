@@ -45,11 +45,17 @@ const authLimiter = rateLimit({
   message: { success: false, message: "Too many authentication attempts. Try again later." },
 });
 
+const configuredOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.CLIENT_URL,
+  ...(process.env.FRONTEND_URLS || "").split(","),
+];
+
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175",
-  process.env.FRONTEND_URL || process.env.CLIENT_URL,
+  ...configuredOrigins.map((origin) => origin.trim()),
 ].filter(Boolean);
 
 app.use(
@@ -95,6 +101,31 @@ app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
     message: "Rama Stationers & Sports API is running",
+  });
+});
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "The requested resource was not found.",
+  });
+});
+
+app.use((error, req, res, next) => {
+  const statusCode = error.statusCode || 500;
+  const isCorsError = error.message === "Not allowed by CORS";
+
+  if (statusCode >= 500) {
+    console.error("Unhandled API error:", error);
+  }
+
+  res.status(isCorsError ? 403 : statusCode).json({
+    success: false,
+    message: isCorsError
+      ? "This origin is not allowed to access the API."
+      : statusCode >= 500
+        ? "An unexpected server error occurred."
+        : error.message,
   });
 });
 
