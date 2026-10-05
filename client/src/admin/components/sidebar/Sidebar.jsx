@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { FiHome, FiBox, FiShoppingCart, FiUsers, FiX } from "react-icons/fi";
+import { FiHome, FiBox, FiShoppingCart, FiMail, FiX } from "react-icons/fi";
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
@@ -8,6 +8,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     { name: "Dashboard", path: "/admin/dashboard", icon: <FiHome /> },
     { name: "Products", path: "/admin/products", icon: <FiBox /> },
     { name: "Orders", path: "/admin/orders", icon: <FiShoppingCart /> },
+    { name: "Messages", path: "/admin/messages", icon: <FiMail /> },
   ];
 
   return (
