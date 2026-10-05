@@ -17,6 +17,7 @@ import addressRoutes from "./routes/addressRoutes.js";
 dotenv.config();
 
 const app = express();
+app.disable("x-powered-by");
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -61,6 +62,13 @@ app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
     message: "Rama Stationers Backend Running 🚀",
+  });
+});
+
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Rama Stationers & Sports API is running",
   });
 });
 
